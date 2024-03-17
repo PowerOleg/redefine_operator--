@@ -51,11 +51,15 @@ public:
 	{
 		if (this->denominator_ == right.denominator_)
 		{
-			return Fraction(this->numerator_ + right.numerator_, right.denominator_);
+			Fraction newFraction(this->numerator_ + right.numerator_, right.denominator_);
+			newFraction.reduce();
+			return newFraction;
 		}
 		else
 		{
-			return Fraction((this->numerator_ * right.denominator_) + (right.numerator_ * this->denominator_), this->denominator_ * right.denominator_);
+			Fraction newFraction((this->numerator_ * right.denominator_) + (right.numerator_ * this->denominator_), this->denominator_ * right.denominator_);
+			newFraction.reduce();
+			return newFraction;
 		}
 	}
 
@@ -69,11 +73,15 @@ public:
 	{
 		if (this->denominator_ == right.denominator_)
 		{
-			return Fraction(this->numerator_ - right.numerator_, right.denominator_);
+			Fraction newFraction(this->numerator_ - right.numerator_, right.denominator_);
+			newFraction.reduce();
+			return newFraction;
 		}
 		else
 		{
-			return Fraction((this->numerator_ * right.denominator_) - (right.numerator_ * this->denominator_), this->denominator_ * right.denominator_);
+			Fraction newFraction((this->numerator_ * right.denominator_) - (right.numerator_ * this->denominator_), this->denominator_ * right.denominator_);
+			newFraction.reduce();
+			return newFraction;
 		}
 	}
 
@@ -85,8 +93,9 @@ public:
 
 	Fraction operator*(Fraction right)
 	{
-		return Fraction(this->numerator_ * right.numerator_, this->denominator_ * right.denominator_);
-		
+		Fraction newFraction(this->numerator_ * right.numerator_, this->denominator_ * right.denominator_);
+		newFraction.reduce();
+		return newFraction;
 	}
 
 	Fraction operator*(int right)
@@ -99,7 +108,6 @@ public:
 	{
 		Fraction newFraction(right.denominator_, right.numerator_);
 		return  *(this) * newFraction;
-
 	}
 
 	Fraction operator/(int right)
@@ -109,7 +117,6 @@ public:
 	}
 
 
-	
 	Fraction operator-()
 	{
 		Fraction newFraction(this->numerator_ * -1, this->denominator_ * -1);
@@ -141,6 +148,24 @@ public:
 		--(*this);
 		return newFraction;
 	}
+
+	void reduce()
+	{
+		int divider = 2;
+		for (int i = 0; i < 150; i++)
+		{
+			if (this->numerator_ % divider == 0 && this->denominator_ % divider == 0)
+			{
+				this->numerator_ = this->numerator_ / divider;
+				this->denominator_ = this->denominator_ / divider;
+			}
+			else
+			{
+				divider++;
+			}
+		}
+	}
+
 };
 
 int main(int argc, char** argv)
@@ -171,8 +196,6 @@ int main(int argc, char** argv)
 	std::cout << "f1" << ((f1 <= f2) ? " <= " : " not <= ") << "f2" << '\n';
 	std::cout << "f1" << ((f1 >= f2) ? " >= " : " not >= ") << "f2" << '\n';
 	*/
-
-	
 
 	Fraction sum_c_c = f1 + f2;
 	f1.print();
@@ -218,8 +241,6 @@ int main(int argc, char** argv)
 	//Fraction div_c_i = f1 / 5;//деление на число
 	//div_c_i.print();
 
-
-
 	std::cout << "++";
 	f1.print();
 	std::cout << " * ";
@@ -252,6 +273,5 @@ int main(int argc, char** argv)
 	std::cout << "\nзначение после унарного знака -" << std::endl;
 	f1.print();
 
-	//надо сделать сокращение допустим 15/25 это 3/4
 	return 0;
 }
